@@ -1,8 +1,10 @@
 void activate_alarm() {
-  update_mpu_6050_data();
+  //MPU mod
+  update_orientation_data();
   
   if (hit_count < max_hit_count){
-    serial_print_mpu_6050_data();
+    //MPU mod
+    serial_print_orientation_data();
     serial_print_hit_data();
   
     //Big hit:

@@ -19,7 +19,7 @@ void setup() {
     Wire.begin();
     delay(2000);
 
-    if (!mpu.setup(0x68)) {  // change to your own address
+    if (!mpu.setup(0x69)) {  // change to your own address
         while (1) {
             Serial.println("MPU connection failed. Please check your connection");
             delay(5000);

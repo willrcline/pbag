@@ -13,8 +13,9 @@ void timer() {
         digitalWrite(led_pin, HIGH);
         current_loop = "activate_alarm";
         current_screen = "progress_bar_screen";
+        
         //call calibration of mpu right as alarm starts right before it starts to read out roll and pitch data.
-        mpu_6050_initialize();
+        loadCalibration();
       }
    }
 }

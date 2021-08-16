@@ -1,3 +1,4 @@
+Communication:
 For i2C devices on arduino, pin A4 is the SDA pin, and pin A5 is the SCL pin.
 Mpu9250, 16x2LCD(w/ i2c shield), and DS3231 use i2c.
 Mpu9250 defaults to address 68 but changes to 69 with 5v power to SD0/SA0 pin.
@@ -6,3 +7,8 @@ DS3231 uses address 68.
 
 SerialMP3 uses serial communication. Options include hardware serial(Rx&Tx pins), altsoftserial(pins 8&9) and software serial(any 2 free pins).
 Internet consensus agrees that one should avoid using the software serial library if possible.
+
+
+Power:
+Mpu9250(Vin and SA0 pins), Catalex SerialMP3, and 16x2-i2cLCD use 5V power
+Buttons and DS3231 use 3V power.

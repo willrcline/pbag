@@ -17,16 +17,16 @@
 
 
 
-#include <DS3231.h> //Library manager library by Andrew Wickert
-#include <LiquidCrystal_I2C.h> //Library manager library by Marco Schwartz
+#include <DS3231.h> //library downloaded from http://www.rinkydinkelectronics.com/library.php?id=73; code reformatted from https://www.instructables.com/Real-time-clock-using-DS3231-EASY/
+#include <LiquidCrystal_I2C.h> //Library manager: library by Marco Schwartz
 #include <EEPROM.h>
 #include <Arduino.h> //not sure what this one does
 #include <SoftwareSerial.h>
 
 //--------------MP3 stuff----------------//
 // Define the RX and TX pins to establish UART communication with the MP3 Player Module.
-#define MP3_RX 5 // to TX
-#define MP3_TX 6 // to RX
+#define MP3_RX 8 // to TX
+#define MP3_TX 9 // to RX
 
 // Define the required MP3 Player Commands:
 
@@ -69,7 +69,8 @@ DS3231  rtc(SDA, SCL);
 //declare millis time interval and previous(timekeeping) variables
 
 long update_time_and_timer_interval = 1100;
-const unsigned long activate_alarm_interval = 500;
+long activate_alarm_interval = 500;
+long orientation_update_interval = 25;
 long debounce_interval = 200;    // the debounce time; increase if the output flickers
 long auto_return_to_mainscreen_interval = 15000;
 long auto_disable_alarm_interval = 300000;
@@ -78,7 +79,8 @@ long main_screen_update_interval = 60000;
 long progress_bar_update_interval = 4000;
 
 long update_time_and_timer_prev = 0;
-unsigned long activate_alarm_prev = 0;
+long activate_alarm_prev = 0;
+long orientation_update_prev = 0;
 long up_debounce_prev = 0;  // the last time the output pin was toggled
 long mid_debounce_prev = 0;
 long down_debounce_prev = 0;
@@ -116,7 +118,7 @@ int min_sec_threshold = 5;
 
 
 //declare gy521 variables::::::
-MPU6050 mpu6050(0x69);
+//MPU6050 mpu6050(0x69);
 float outputX;
 float outputY;
 float outputZ;
@@ -246,6 +248,16 @@ void loop() {
 
     activate_alarm_prev = millis();
   }
+
+  //This activates very rapidly while in activate_alarm loop to coninually update roll and pitch variables from orientation sensor if available.
+if ( (current_loop == "activate_alarm") and (mpu.update()) ) {
+      static uint32_t orientation_update_prev = millis();
+      if (millis() - orientation_update_prev >=  orientation_update_interval) {
+        //activate alarm call every time activate_alarm_interval time passes if in activate_alarm loop
+        update_orientation_data();
+        orientation_update_prev = millis();
+  }
+  
 
  if ( (millis() - main_screen_update_prev >= main_screen_update_interval) and (current_sec == 0) and (current_screen == "main_screen") ) {
     main_screen();

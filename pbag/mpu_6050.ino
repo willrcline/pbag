@@ -13,14 +13,13 @@ void mpu_6050_initialize() {
 }
 
 
-void serial_print_mpu_6050_data() {
-  Serial.print(F("AccelX: "));
+
+//MPU mod
+void serial_print_orientation_data() {
+  Serial.print(F("Roll: "));
   Serial.println(outputX);
 
   
-  Serial.print(F("AccelY: "));
+  Serial.print(F("Pitch: "));
   Serial.println(outputY);
-
-  Serial.print(F("AccelZ: "));
-  Serial.println(outputZ);
 }
