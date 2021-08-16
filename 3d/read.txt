@@ -1,0 +1,7 @@
+Holes in bezel for 6 x 6 x 4.3 mm TACT Switch Push Button.
+Original bezel file found at https://www.thingiverse.com/thing:614241.
+Bezel original file comes out in M and is scaled down to MM.
+
+V1 of project box using 1W 8Ohm (28mm diameter) speaker
+V1 speaker sourced from https://www.aliexpress.com/item/32782488336.html?spm=a2g0s.9042311.0.0.27424c4dcHQSDS.
+
