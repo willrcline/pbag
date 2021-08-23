@@ -22,6 +22,9 @@
 #include <EEPROM.h>
 #include <Arduino.h> //not sure what this one does
 #include <SoftwareSerial.h>
+#include "MPU9250.h"
+#include "eeprom_utils.h"
+
 
 //--------------MP3 stuff----------------//
 // Define the RX and TX pins to establish UART communication with the MP3 Player Module.
@@ -57,9 +60,9 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //set pin numbers
 int led_pin = 13;
-int mid_btn_pin = 10;
+int mid_btn_pin = 11;
 int up_btn_pin = 12;
-int down_btn_pin = 8;
+int down_btn_pin = 10;
 
 String direction_btn_polling;
 
@@ -117,11 +120,16 @@ String alarm_mode_string;
 int min_sec_threshold = 5;
 
 
-//declare gy521 variables::::::
-//MPU6050 mpu6050(0x69);
-float outputX;
-float outputY;
-float outputZ;
+//declare orientation sensing variables::::::
+MPU9250 mpu;
+float pitch;
+float roll;
+float raw_yaw;
+float raw_pitch;
+float raw_roll;
+float alpha;
+float beta;
+float gamma;
 
 
 //declare activate_alarm variables
@@ -136,13 +144,11 @@ int hit_count_progress_bar_ammount;
 //makes big med and small all equal the same value of one to determine when any hit at all has occured to do things after the first hit
 int first_hit = 0;
 
-void setup()
-{
+
+void setup() {
   // Setup Serial connection
   Serial.begin(115200);
   Serial.println(F("serial has begun"));
-
-  serial_print_AM_or_PM(alarm_hour);
 
   // Initialize the rtc object
   rtc.begin();
@@ -163,7 +169,7 @@ void setup()
   //let alarm_mode_string reflect the binary version of alarm_mode stored in EEPROM.
   update_alarm_mode_string();
   
-   // set up the LCD's number of columns and rows:
+  // set up the LCD's number of columns and rows:
   lcd.init();
   Serial.println(F("lcd initiated"));
 
@@ -196,10 +202,8 @@ void setup()
 }
 
 void loop() {
-  
-  
- //update time less than every second
- if (millis() - update_time_and_timer_prev >= update_time_and_timer_interval) {
+  //update time less than every second
+  if (millis() - update_time_and_timer_prev >= update_time_and_timer_interval) {
     update_time();
 
     update_time_and_timer_prev = millis();
@@ -213,13 +217,13 @@ void loop() {
     }
  }
 
- if (millis() - serial_info_update_prev >= serial_info_update_interval) {
+  if (millis() - serial_info_update_prev >= serial_info_update_interval) {
     serial_print_time_info();
 
     serial_info_update_prev = millis();
  }
  
- if ( (millis() - up_debounce_prev > debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
+  if ( (millis() - up_debounce_prev > debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
     up_btn();
 
     Serial.println(F("Up btn pressed"));
@@ -256,6 +260,7 @@ if ( (current_loop == "activate_alarm") and (mpu.update()) ) {
         //activate alarm call every time activate_alarm_interval time passes if in activate_alarm loop
         update_orientation_data();
         orientation_update_prev = millis();
+      }
   }
   
 

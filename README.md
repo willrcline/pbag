@@ -13,3 +13,6 @@ Contains:
 
 ### Wiring Diagrams
 Self explanatory. Images that will help reproducability of the hardware wiring necessary for the product.
+
+### 3D
+3D printing files for plastic apparatus on product

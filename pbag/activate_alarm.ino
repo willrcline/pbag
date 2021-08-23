@@ -8,7 +8,7 @@ void activate_alarm() {
     serial_print_hit_data();
   
     //Big hit:
-    if ( (outputX < 1.3) or (outputY < -9.6) or (outputY > 9.6) ){
+    if ( (pitch < 75) or (roll < 75) ){
       big += 1;
       //play sound effect when big hit is triggered
       //send_command_to_MP3_player(play_second_song, 6);
@@ -23,7 +23,7 @@ void activate_alarm() {
       */
     }        
     //Med hit:
-    else if ( (outputX < 2.5) or (outputY < -8) or (outputY > 8) ) {
+    else if ( (pitch < 55) or (roll < 55) ) {
       med += 1;
        /*
       if (angle_roll_output>5.5 or angle_roll_output<-7.7) {
@@ -33,7 +33,7 @@ void activate_alarm() {
     */
     }
     //Small hit
-    else if ( (outputX < 7.2) or (outputY < -6.5) or (outputY > 6.5) ) {
+    else if ( (pitch < 35) or (roll < 35) ) {
       small += 1;
         /*
       if (angle_roll_output>4 or angle_roll_output<-6) {

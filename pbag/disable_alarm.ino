@@ -12,7 +12,7 @@ void disable_alarm() {
   main_screen();
 }
 
-void serial_print_hit_data() {;
+void serial_print_hit_data() {
   Serial.print('\n');
   Serial.println(F("Hit-data breakdown:"));
   Serial.print(F("hit count: "));

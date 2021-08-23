@@ -1,4 +1,4 @@
-
+ 
 ////MPU mod
 void update_orientation_data() {
 //    Serial.print('\n');
@@ -18,11 +18,12 @@ void update_orientation_data() {
     roll = abs(raw_roll - 90);
 }
 
-void serial_print_accel_data() {
+//MPU mod
+void serial_print_orientation_data() {
   Serial.print(F("Roll: "));
-  Serial.println(angle_roll_output);
+  Serial.println(roll);
 
   
   Serial.print(F("Pitch: "));
-  Serial.println(angle_pitch_output);
+  Serial.println(pitch);
 }
