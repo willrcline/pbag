@@ -47,7 +47,7 @@ void down_btn() {
     }
     else if (current_screen == "alarm_set_min_screen") {
       if (alarm_min <= 0) {
-        alarm_min = 23;
+        alarm_min = 59;
       }
       else {
         alarm_min -= 1;

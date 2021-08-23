@@ -75,7 +75,7 @@ long update_time_and_timer_interval = 1100;
 long activate_alarm_interval = 500;
 long orientation_update_interval = 25;
 long debounce_interval = 200;    // the debounce time; increase if the output flickers
-long auto_return_to_mainscreen_interval = 15000;
+long auto_return_to_mainscreen_interval = 30000;
 long auto_disable_alarm_interval = 300000;
 long serial_info_update_interval = 5000;
 long main_screen_update_interval = 60000;
@@ -155,7 +155,7 @@ void setup() {
   Serial.println(F("rtc begun"));
 
   //uncomment below to call set_datetime(hour,min,sec)/////////////////
-  //set_datetime(4, 23, 55);
+  //set_datetime(18, 52, 12);
 
   //initialize current time values with rtc data
   update_time();
