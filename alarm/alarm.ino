@@ -160,11 +160,13 @@ void setup() {
   //initialize current time values with rtc data
   update_time();
 
-  //get most recent values for certain things from EEPROM storage
+  //Uncomment below to set alarm settings and write them to eeprom before eeprom time values are initialized.
   //alarm_hour = 18;
   //alarm_min = 56;
   //alarm_mode = 1;
   //EEPROM_write_time();
+  //
+  //Pull values saved to eeprom into variables in the code
   EEPROM_init();
   //let alarm_mode_string reflect the binary version of alarm_mode stored in EEPROM.
   update_alarm_mode_string();
@@ -189,20 +191,21 @@ void setup() {
   pinMode(mid_btn_pin, INPUT);
   Serial.println(F("button pins initialized"));
   
-  //sets up accelerometer stuff ??
+  //is this necessary now with mpu9250?
   Wire.begin(); 
   Serial.println(F("wire begin function called"));
 
   // Initiate the Serial MP3 Player Module.
   MP3.begin(9600);
   // Select the SD Card.
-  send_command_to_MP3_player(select_SD_card, 5);
+  //send_command_to_MP3_player(select_SD_card, 5);
   //sets volume based on what is in the hex command
-  send_command_to_MP3_player(set_volume, 5);
+  //send_command_to_MP3_player(set_volume, 5);
 }
 
 void loop() {
   //update time less than every second
+  //calls timer function if in timer loop. Timer loop checks whether it's time to activate alarm and does the job of changing current loop to activate_alarm if so.
   if (millis() - update_time_and_timer_prev >= update_time_and_timer_interval) {
     update_time();
 

@@ -61,10 +61,10 @@ void saveCalibration() {
 }
 
 void loadCalibration() {
-    Serial.println("Load calibrated parameters from EEPROM");
+    //Serial.println("Load calibrated parameters from EEPROM");
     if (isCalibrated()) {
-        Serial.println("calibrated? : YES");
-        Serial.println("load calibrated values");
+//        Serial.println("calibrated? : YES");
+//        Serial.println("load calibrated values");
         mpu.setAccBias(
             readFloat(EEP_ACC_BIAS + 0),
             readFloat(EEP_ACC_BIAS + 4),
@@ -82,8 +82,8 @@ void loadCalibration() {
             readFloat(EEP_MAG_SCALE + 4),
             readFloat(EEP_MAG_SCALE + 8));
     } else {
-        Serial.println("calibrated? : NO");
-        Serial.println("load default values");
+//        Serial.println("calibrated? : NO");
+//        Serial.println("load default values");
         mpu.setAccBias(0., 0., 0.);
         mpu.setGyroBias(0., 0., 0.);
         mpu.setMagBias(0., 0., 0.);

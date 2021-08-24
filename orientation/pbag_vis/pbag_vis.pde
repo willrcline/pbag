@@ -15,7 +15,7 @@ String data="";
 float roll, pitch;
 
 void setup() {
-  size (960, 640, P3D);
+  size (1344, 896, P3D);
   myPort = new Serial(this, "/dev/cu.usbserial-1410", 115200); // starts the serial communication
   myPort.bufferUntil('\n');
   
@@ -37,7 +37,7 @@ void draw() {
   
   // 3D 0bject
   //textSize(30);  
-  box (80, 80, 380); // Draw box
+  box (120, 120, 570); // Draw box
   fill(230,0,0);
   
   //(shape file, x, y, width, height)
