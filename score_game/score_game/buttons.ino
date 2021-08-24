@@ -29,26 +29,24 @@ void screen_toggle() {
   //TOGGLE TO NEXT SCREEN IN SCREEN ORDERING
   //(current screen variable is updated within screen function calls)
   if (current_screen == "start") {
-    //is changing current_screen variable here redundant since when the screen function is called, it changes that variable within the function?
-    //current_screen = "select_time";
     select_time_screen();
 
     auto_return_to_startscreen_prevmillis = millis();
   }
   else if (current_screen == "select_time") {
-    //current_screen = "score_game";
     score_game_screen();
+    //prevmillis var is reset to millis during this transition from "select_time" to "score_game" screen.
+    //After the specified number of minutes has passed, final_score_screen will be triggered to end score_game.
+    score_game_time_length_prevmillis = millis();
 
     auto_return_to_startscreen_prevmillis = millis();
   }
   else if (current_screen == "score_game") {
-    //current_screen = "final_score";
     final_score_screen();
 
     auto_return_to_startscreen_prevmillis = millis();
   }
   else if (current_screen == "final_score") {
-    //current_screen = "start";
     start_screen();
 
     auto_return_to_startscreen_prevmillis = millis();

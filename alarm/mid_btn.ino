@@ -26,24 +26,24 @@ void screen_toggle() {
     current_screen = "alarm_set_hour_screen";
     alarm_set_hour_screen();
 
-    auto_return_to_mainscreen_prev = millis();
+    auto_return_to_mainscreen_prevmillis = millis();
   }
   else if (current_screen == "alarm_set_hour_screen") {
     current_screen = "alarm_set_min_screen";
     alarm_set_min_screen();
 
-    auto_return_to_mainscreen_prev = millis();
+    auto_return_to_mainscreen_prevmillis = millis();
   }
   else if (current_screen == "alarm_set_min_screen") {
     current_screen = "alarm_set_mode_screen";
     alarm_set_mode_screen();
 
-    auto_return_to_mainscreen_prev = millis();
+    auto_return_to_mainscreen_prevmillis = millis();
   }
   else if (current_screen == "alarm_set_mode_screen") {
     current_screen = "main_screen";
     main_screen();
 
-    auto_return_to_mainscreen_prev = millis();
+    auto_return_to_mainscreen_prevmillis = millis();
   }
 }

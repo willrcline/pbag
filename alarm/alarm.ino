@@ -81,17 +81,17 @@ long serial_info_update_interval = 5000;
 long main_screen_update_interval = 60000;
 long progress_bar_update_interval = 4000;
 
-long update_time_and_timer_prev = 0;
-long activate_alarm_prev = 0;
-long orientation_update_prev = 0;
-long up_debounce_prev = 0;  // the last time the output pin was toggled
-long mid_debounce_prev = 0;
-long down_debounce_prev = 0;
-long auto_return_to_mainscreen_prev = 0;
-long main_screen_update_prev = 0;
-long serial_info_update_prev = 0;
-long auto_disable_alarm_prev = 0;
-long progress_bar_update_prev = 0;
+long update_time_and_timer_prevmillis = 0;
+long activate_alarm_prevmillis = 0;
+long orientation_update_prevmillis = 0;
+long up_debounce_prevmillis = 0;  // the last time the output pin was toggled
+long mid_debounce_prevmillis = 0;
+long down_debounce_prevmillis = 0;
+long auto_return_to_mainscreen_prevmillis = 0;
+long main_screen_update_prevmillis = 0;
+long serial_info_update_prevmillis = 0;
+long auto_disable_alarm_prevmillis = 0;
+long progress_bar_update_prevmillis = 0;
 
 
 //declare other rtc variables
@@ -191,9 +191,17 @@ void setup() {
   pinMode(mid_btn_pin, INPUT);
   Serial.println(F("button pins initialized"));
   
-  //is this necessary now with mpu9250?
-  Wire.begin(); 
+  //INIT ORIENTATION SENSOR
+  Wire.begin();
   Serial.println(F("wire begin function called"));
+  delay(2000);
+  if (!mpu.setup(0x69)) {  // change to your own address
+        while (1) {
+            Serial.println("MPU connection failed. Please check your connection");
+            delay(5000);
+        }
+    }
+  loadCalibration();
 
   // Initiate the Serial MP3 Player Module.
   MP3.begin(9600);
@@ -206,10 +214,10 @@ void setup() {
 void loop() {
   //update time less than every second
   //calls timer function if in timer loop. Timer loop checks whether it's time to activate alarm and does the job of changing current loop to activate_alarm if so.
-  if (millis() - update_time_and_timer_prev >= update_time_and_timer_interval) {
+  if (millis() - update_time_and_timer_prevmillis >= update_time_and_timer_interval) {
     update_time();
 
-    update_time_and_timer_prev = millis();
+    update_time_and_timer_prevmillis = millis();
 
     //call timer every split seccond right after time updates if that is the designated current loop.
     if (current_loop == "timer") {
@@ -220,75 +228,75 @@ void loop() {
     }
  }
 
-  if (millis() - serial_info_update_prev >= serial_info_update_interval) {
+  if (millis() - serial_info_update_prevmillis >= serial_info_update_interval) {
     serial_print_time_info();
 
-    serial_info_update_prev = millis();
+    serial_info_update_prevmillis = millis();
  }
  
-  if ( (millis() - up_debounce_prev > debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
+  if ( (millis() - up_debounce_prevmillis > debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
     up_btn();
 
     Serial.println(F("Up btn pressed"));
     
-    up_debounce_prev = millis();
+    up_debounce_prevmillis = millis();
  }
  
- if ( (millis() - mid_debounce_prev > debounce_interval) and (digitalRead(mid_btn_pin) == HIGH) ) {
+ if ( (millis() - mid_debounce_prevmillis > debounce_interval) and (digitalRead(mid_btn_pin) == HIGH) ) {
     mid_btn();
 
-    mid_debounce_prev = millis();
+    mid_debounce_prevmillis = millis();
  }
 
-  if ( (millis() - down_debounce_prev > debounce_interval) and (digitalRead(down_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
+  if ( (millis() - down_debounce_prevmillis > debounce_interval) and (digitalRead(down_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
     Serial.println(F("Down btn pressed"));
     down_btn();
 
-    down_debounce_prev = millis();
+    down_debounce_prevmillis = millis();
  }
  
 
  
-  if ( (millis() - activate_alarm_prev >= activate_alarm_interval) and (current_loop == "activate_alarm") ) {
+  if ( (millis() - activate_alarm_prevmillis >= activate_alarm_interval) and (current_loop == "activate_alarm") ) {
     //activate alarm call every time activate_alarm_interval time passes.
     activate_alarm();
 
-    activate_alarm_prev = millis();
+    activate_alarm_prevmillis = millis();
   }
 
   //This activates very rapidly while in activate_alarm loop to coninually update roll and pitch variables from orientation sensor if available.
 if ( (current_loop == "activate_alarm") and (mpu.update()) ) {
-      static uint32_t orientation_update_prev = millis();
-      if (millis() - orientation_update_prev >=  orientation_update_interval) {
+      static uint32_t orientation_update_prevmillis = millis();
+      if (millis() - orientation_update_prevmillis >=  orientation_update_interval) {
         //activate alarm call every time activate_alarm_interval time passes if in activate_alarm loop
         update_orientation_data();
-        orientation_update_prev = millis();
+        orientation_update_prevmillis = millis();
       }
   }
   
 
- if ( (millis() - main_screen_update_prev >= main_screen_update_interval) and (current_sec == 0) and (current_screen == "main_screen") ) {
+ if ( (millis() - main_screen_update_prevmillis >= main_screen_update_interval) and (current_sec == 0) and (current_screen == "main_screen") ) {
     main_screen();
     Serial.print('\n');
     Serial.println(F("Main Screen updated"));
 
-    main_screen_update_prev = millis();
+    main_screen_update_prevmillis = millis();
  }
 
 //dont call auto return to main screen if already on main screen or on progress bar screen
- if ( (millis() - auto_return_to_mainscreen_prev >= auto_return_to_mainscreen_interval) and (current_screen != "main_screen") and (current_screen != "progress_bar_screen") ) {
+ if ( (millis() - auto_return_to_mainscreen_prevmillis >= auto_return_to_mainscreen_interval) and (current_screen != "main_screen") and (current_screen != "progress_bar_screen") ) {
     main_screen();
     Serial.println(F("Auto returned to mainscreen")); 
   
  }
 
- if ( (millis() - auto_disable_alarm_prev >= auto_disable_alarm_interval) and (current_loop == "activate_alarm") ) {
+ if ( (millis() - auto_disable_alarm_prevmillis >= auto_disable_alarm_interval) and (current_loop == "activate_alarm") ) {
     Serial.println(F("Alarm auto disabled"));
     disable_alarm();
  }
 
  //update progress bar screen during alarm activation
- if ( (millis() - progress_bar_update_prev >= progress_bar_update_interval) and (current_screen == "progress_bar_screen") ) {
+ if ( (millis() - progress_bar_update_prevmillis >= progress_bar_update_interval) and (current_screen == "progress_bar_screen") ) {
     progress_bar_screen();
  }
 }

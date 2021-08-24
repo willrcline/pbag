@@ -6,7 +6,7 @@ void timer() {
       //Serial.begin(9600);
       if (hit_count < max_hit_count) {
         //reset auto disable alarm variable right before start of when current_loop begins
-        auto_disable_alarm_prev = millis();
+        auto_disable_alarm_prevmillis = millis();
         //turn on alarm song to be turned off later after first bag hit
         //send_command_to_MP3_player(play_first_song, 6);
         //turn on led pin to be turned off later

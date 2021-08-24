@@ -48,14 +48,14 @@ void score_game_screen() {
   //line 1
   lcd.setCursor(0, 0);
   lcd.print(F("Score: "));
-  //lcd.print(score_game_current_score);
+  lcd.print(score);
 
   //line 2
   lcd.setCursor(0, 1);
   lcd.print(F("Time left: "));
-  //lcd.print(score_game_remaining_min);
-  //lcd.print(F(":"));
-  //lcd.print(score_game_remaining_sec);
+  lcd.print(score_game_min_remaining);
+  lcd.print(F(":"));
+  lcd.print(score_game_sec_remaining);
 }
 
 void final_score_screen() {

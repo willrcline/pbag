@@ -7,7 +7,8 @@
 
 #include <LiquidCrystal_I2C.h> //used for screen; Library manager: library by Marco Schwartz
 #include <SoftwareSerial.h> //used for sound
-
+#include "MPU9250.h" //Used for Orientation sensor; Built by UnityLab on Fiver
+#include "eeprom_utils.h" //Used for Orientation sensor calibration; Built by UnityLab on Fiver
 
 //VARIABLES
 
@@ -45,14 +46,22 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //Millis variables
 //(time keeper variable-holds previous snapshot of millis)
+long general_debug_info_prevmillis = 0;
+long orientation_debug_info_prevmillis = 0;
 long up_debounce_prevmillis = 0;  // the last time the output pin was toggled
 long mid_debounce_prevmillis = 0;
 long down_debounce_prevmillis = 0;
 long auto_return_to_startscreen_prevmillis = 0;
+long orientation_update_prevmillis = 0;
+long add_to_score_prevmillis = 0;
+long score_game_time_length_prevmillis = 0;
 //(time intervals)
+long general_debug_info_interval = 5000;
+long orientation_debug_info_interval = 400;
 long debounce_interval = 200;    //Debounce time for buttons; increase if the output flickers
 long auto_return_to_mainscreen_interval = 30000;
-
+long orientation_update_interval = 25;
+long add_to_score_interval = 100;
 
 //VARIABLES CONTINUED...
 
@@ -69,13 +78,31 @@ String direction_btn_polling;
 String current_screen = "start";
 
 //Score variables
-int hit_count = 0;
-int big = 0;
-int med = 0;
-int small = 0;
+int score = 0;
+int unweighted_score = 0;
+int big_hit = 0;
+int med_hit = 0;
+int small_hit = 0;
+
+//Variables for time remaining in score_game
+long score_game_total_sec_remaining = 0;
+int score_game_min_remaining = 0;
+int score_game_sec_remaining = 0;
 
 //Score game time length variable(the length the full game is set for); init at 1(Min).
 int score_game_time_length = 1;
+
+//Orientation sensor variables
+MPU9250 mpu;
+float pitch;
+float roll;
+float raw_yaw;
+float raw_pitch;
+float raw_roll;
+float alpha;
+float beta;
+float gamma;
+
 
 void setup() {
   //INIT SERIAL MONITOR
@@ -95,31 +122,85 @@ void setup() {
   //INIT MP3 PLAYER 
   MP3.begin(9600);
   Serial.println(F("MP3 player init"));
+
+  //INIT ORIENTATION SENSOR
+  Wire.begin();
+  delay(2000);
+
+  if (!mpu.setup(0x69)) {  // change to your own address
+      while (1) {
+          Serial.println("MPU connection failed. Please check your connection");
+          delay(5000);
+      }
+  }
+  loadCalibration();
 }
 
 void loop() {
+  //DEBUG INFO REGULARLY PRINTED TO THE SERIAL MONITOR//
+  //GENERAL DEBUG INFO SENT TO SERIAL MONITOR EVERY 5 SECONDS
+  if (millis() > general_debug_info_prevmillis + general_debug_info_interval) {
+    print_general_debug_info();
 
+    general_debug_info_prevmillis = millis();
+  }
+
+  //ORIENTATION DEBUG INFO SENT TO SERIAL MONITOR EVERY SPLIT SECOND WHEN CURRENT_SCREEN IS SUCH THAT ORIENTATION SENSING OCCURS.
+  if ( (current_screen == "score_game") and (millis() > orientation_debug_info_prevmillis + orientation_debug_info_interval) ) {
+    print_orientation_debug_info();
+
+    orientation_debug_info_prevmillis = millis();
+  }
+
+  
+  //BUTTON POLLING//
   //POLLS FOR MID BUTTON GIVEN THAT DEBOUNCE TIME INTERVAL HAS PASSED
-  if ( (millis() - mid_debounce_prevmillis > debounce_interval) and (digitalRead(mid_btn_pin) == HIGH) ) {
+  if ( (millis() > mid_debounce_prevmillis + debounce_interval) and (digitalRead(mid_btn_pin) == HIGH) ) {
     mid_btn();
 
     mid_debounce_prevmillis = millis();
- }
+  }
   
   //POLLS FOR UP BUTTON GIVEN THAT DEBOUNCE TIME INTERVAL HAS PASSED AND DIRECTION_BTN_POLLING IS SET TO "ON".
-  if ( (millis() - up_debounce_prevmillis > debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
+  if ( (millis() > up_debounce_prevmillis + debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
     up_btn();
     
     up_debounce_prevmillis = millis();
- }
+  }
 
   //POLLS FOR DOWN BUTTON GIVEN THAT DEBOUNCE TIME INTERVAL HAS PASSED AND DIRECTION_BTN_POLLING IS SET TO "ON".
-  if ( (millis() - down_debounce_prevmillis > debounce_interval) and (digitalRead(down_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
+  if ( (millis() > down_debounce_prevmillis + debounce_interval) and (digitalRead(down_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
     down_btn();
 
     down_debounce_prevmillis = millis();
- }
+  }
 
+  //ORIENTATION VAR AND SCORING VAR UPDATES//
+  //CALLS FOR UPDATE OF RAW ORIENTATION DATA AND SUBSEQUENTLY UPDATES ALL ORIENTATION VARS...
+  //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME", MPU.UPDATE() == TRUE, AND ORIENTATION UPDATE TIME INTERVAL HAS PASSED.
+  if ( (current_screen == "score_game") and (mpu.update()) ) {
+    static uint32_t orientation_update_prevmillis = millis();
+    if (millis() > orientation_update_prevmillis + orientation_update_interval) {
+      update_orientation_vars();
+    }
+  }
+ 
+  //ADDS TALLY TO HIT VARIABLES AND UPDATES SCORE VALUE; CALLS FUNCTION THAT USES MILLIS() AND PREVMILLIS VAR TO CALCULATE VARS OF TIME REMAINING;...
+  //...REPRINTS SCORE_GAME_SCREEN(TO DISPLAY UPDATED SCORE VAR)...
+  //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME" AND ADD_TO_SCORE_INTERVAL OF A SPLIT SECOND HAS PASSED SINCE LAST CALL.
+  if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
+    add_to_score();
+    calculate_score_game_time_remaining();
+    score_game_screen();
+
+    add_to_score_prevmillis = millis();
+    }
   //send_command_to_MP3_player(play_second_song, 6);
-  //delay(8000);
+
+  //CALLS FUNCTION TO PRINT FINAL_SCORE_SCREEN GIVEN THAT SCORE_GAME'S SPECIFIED TIME LENGTH HAS PASSED AND CURRENT_SCREEN IS SET TO "SCORE_GAME". PREVMILLIS VAR IS RESET TO MILLIS AT SWITCH FROM "SELECT_TIME" SCREEN TO "SCORE_GAME" SCREEN.
+  if ( (current_screen == "score_game") and (millis() > score_game_time_length_prevmillis + score_game_time_length*60000) ) {
+    final_score_screen();
+
+    score_game_time_length_prevmillis = millis();
+    }
 }
