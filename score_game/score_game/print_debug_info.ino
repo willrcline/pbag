@@ -26,10 +26,5 @@ void print_orientation_debug_info() {
   Serial.print(F(" remaining of "));
   Serial.print(score_game_time_length);
   Serial.println(F(" min(s)"));
-
-  Serial.println(millis());
-  Serial.println(score_game_time_length_prevmillis);
-  Serial.println(score_game_total_sec_remaining);
-  
   Serial.print('\n');
 }

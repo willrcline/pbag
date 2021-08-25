@@ -51,17 +51,17 @@ long orientation_debug_info_prevmillis = 0;
 long up_debounce_prevmillis = 0;  // the last time the output pin was toggled
 long mid_debounce_prevmillis = 0;
 long down_debounce_prevmillis = 0;
-long auto_return_to_startscreen_prevmillis = 0;
 long orientation_update_prevmillis = 0;
 long add_to_score_prevmillis = 0;
 long score_game_time_length_prevmillis = 0;
+long auto_return_to_startscreen_prevmillis = 0;
 //(time intervals)
 long general_debug_info_interval = 5000;
 long orientation_debug_info_interval = 400;
 long debounce_interval = 200;    //Debounce time for buttons; increase if the output flickers
-long auto_return_to_mainscreen_interval = 30000;
 long orientation_update_interval = 25;
 long add_to_score_interval = 100;
+long auto_return_to_startscreen_interval = 30000;
 
 //VARIABLES CONTINUED...
 
@@ -197,10 +197,18 @@ void loop() {
     }
   //send_command_to_MP3_player(play_second_song, 6);
 
+  //FUNCTION CALLS TO SWITCH SCREENS AFTER SPECIFICED TIME INTERVAL AND GIVEN CERTAIN CONDITIONS//
   //CALLS FUNCTION TO PRINT FINAL_SCORE_SCREEN GIVEN THAT SCORE_GAME'S SPECIFIED TIME LENGTH HAS PASSED AND CURRENT_SCREEN IS SET TO "SCORE_GAME". PREVMILLIS VAR IS RESET TO MILLIS AT SWITCH FROM "SELECT_TIME" SCREEN TO "SCORE_GAME" SCREEN.
   if ( (current_screen == "score_game") and (millis() > score_game_time_length_prevmillis + score_game_time_length*60000) ) {
     final_score_screen();
 
     score_game_time_length_prevmillis = millis();
     }
+
+  //GIVEN THAT CURRENT_SCREEN NOT SET TO "START" OR "SCORE_GAME", AFTER THE SUM OF PREVMILLIS AND THE TIME INTERVAL(OF ABOUT 30 SECS) BECOMES LESS THAN MILLIS(), START_SCREEN FUNCTION IS CALLED. 
+  if ( (millis() >= auto_return_to_startscreen_prevmillis + auto_return_to_startscreen_interval) and (current_screen != "start") and (current_screen != "score_game") ) {
+    start_screen();
+    Serial.println(F("Auto returned to Start_Screen")); 
+  
+ }
 }
