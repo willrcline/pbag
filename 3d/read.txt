@@ -1,6 +1,8 @@
-Holes in bezel for 6 x 6 x 4.3 mm TACT Switch Push Button.
+Holes in bezel for 12 x 12 x 4.3 mm TACT Switch Push Button.
 Original bezel file found at https://www.thingiverse.com/thing:614241.
 Bezel original file comes out in M and is scaled down to MM.
+Perfboards are 6x4 cm. The space on each end is the same length as 2 hole units. There are 20 holes long on the perfboard. Therefore there are 12 total units(10 hole pairs and 2 end spots),
+Each unit is therefore .5 cm (5mm)
 
 V1 of project box using 1W 8Ohm (28mm diameter) speaker
 V1 speaker sourced from https://www.aliexpress.com/item/32782488336.html?spm=a2g0s.9042311.0.0.27424c4dcHQSDS.

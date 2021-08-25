@@ -1,4 +1,4 @@
-//CONTENTS
+//PAGE CONTENTS
 //Include libraries
 //Define Variables
 //Setup
@@ -10,7 +10,16 @@
 #include "MPU9250.h" //Used for Orientation sensor; Built by UnityLab on Fiver
 #include "eeprom_utils.h" //Used for Orientation sensor calibration; Built by UnityLab on Fiver
 
-//VARIABLES
+//VARIABLE CONTENTS
+//MP3 serial pins; send_command_to_MP3_player commands, SoftwareSerial variables connect to rx/tx pin variables
+//LCD set i2c Address and display settings
+//Fluid PrevMillis and const MillisInterval vars
+//Button pin numbers; direction button (set to "ON" or "OFF")
+//Current_screen
+//Score variables(big,med,small,score,etc.)
+//Time remaining in score_game(min,sec,total_sec)
+//Score game time length
+//Orientation sensor(raw, interpreted)
 
 //--------------MP3 stuff----------------//
 // Define the RX and TX pins to establish UART communication with the MP3 Player Module.
@@ -22,11 +31,11 @@
 // Select storage device to TF card
 static int8_t select_SD_card[] = {0x7e, 0x03, 0X35, 0x01, 0xef}; // 7E 03 35 01 EF
 // Play with index: /01/001xxx.mp3
-static int8_t play_first_song[] = {0x7e, 0x04, 0x41, 0x00, 0x01, 0xef}; // 7E 04 41 00 01 EF
+static int8_t play_first_track[] = {0x7e, 0x04, 0x41, 0x00, 0x01, 0xef}; // 7E 04 41 00 01 EF
 // Play with index: /01/002xxx.mp3
-static int8_t play_second_song[] = {0x7e, 0x04, 0x41, 0x00, 0x02, 0xef}; // 7E 04 41 00 02 EF
+static int8_t play_second_track[] = {0x7e, 0x04, 0x41, 0x00, 0x02, 0xef}; // 7E 04 41 00 02 EF
 // Play the song.
-static int8_t play_third_song[] = {0x7e, 0x04, 0x41, 0x00, 0x03, 0xef}; // 7E 04 41 00 02 EF
+static int8_t play_third_track[] = {0x7e, 0x04, 0x41, 0x00, 0x03, 0xef}; // 7E 04 41 00 02 EF
 // Play the song.
 static int8_t play[] = {0x7e, 0x02, 0x01, 0xef}; // 7E 02 01 EF
 // Pause the song.
@@ -39,7 +48,6 @@ static int8_t set_volume[] = {0x7E, 0x03, 0x31, 0x0F, 0xEF};
 // Define the Serial MP3 Player Module.
 SoftwareSerial MP3(MP3_RX, MP3_TX);
 //------------------------------------------------//
-
 
 // Set the LCD address to 0x27 for a 16 chars and 2 line display
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -56,21 +64,19 @@ long add_to_score_prevmillis = 0;
 long score_game_time_length_prevmillis = 0;
 long auto_return_to_startscreen_prevmillis = 0;
 //(time intervals)
-long general_debug_info_interval = 5000;
-long orientation_debug_info_interval = 400;
-long debounce_interval = 200;    //Debounce time for buttons; increase if the output flickers
-long orientation_update_interval = 25;
-long add_to_score_interval = 100;
-long auto_return_to_startscreen_interval = 30000;
-
-//VARIABLES CONTINUED...
+const long general_debug_info_interval = 5000;
+const long orientation_debug_info_interval = 400;
+const long debounce_interval = 200;    //Debounce time for buttons; increase if the output flickers
+const long orientation_update_interval = 25;
+const long add_to_score_interval = 100;
+const long auto_return_to_startscreen_interval = 30000;
 
 //Button variables
 //(pin numbers)
-int led_pin = 13;
-int mid_btn_pin = 11;
-int up_btn_pin = 12;
-int down_btn_pin = 10;
+const int led_pin = 13;
+const int mid_btn_pin = 11;
+const int up_btn_pin = 12;
+const int down_btn_pin = 10;
 //(will be set to on or off)
 String direction_btn_polling;
 
@@ -103,6 +109,11 @@ float alpha;
 float beta;
 float gamma;
 
+//CONTENTS
+//Init serial monitor at 115200 baud
+//Init LCD and call function to print start_screen
+//Init MP3 player at 9600 baud
+//Init wire to read orientation sensor, load calibration for sensor
 
 void setup() {
   //INIT SERIAL MONITOR
@@ -135,6 +146,17 @@ void setup() {
   }
   loadCalibration();
 }
+
+//CONTENTS
+//General debug info (every 5 secs)
+//Orientation debug info (during orientation sensing, every split second )
+//Mid button polling (always occuring, delayed only by split second debounce interval)
+//Up button polling (while set to certain LCD screen displays, delayed only by split second debounce interval)
+//Down button polling (while set to certain LCD screen displays, delayed only by split second debounce interval)
+//Update orientation vars (during orientation sensing, every split second)
+//Score game repeated game functions (during score game screen, every split second)
+//Final score screen printed after specified score game duration passes (during score game screen, occurs once after number of minutes specified on select_time screen passes)
+//Start screen (during any screen where LCD interface inactivity can be interpreted as idleness, occurs after about 30 seconds)
 
 void loop() {
   //DEBUG INFO REGULARLY PRINTED TO THE SERIAL MONITOR//
@@ -190,12 +212,12 @@ void loop() {
   //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME" AND ADD_TO_SCORE_INTERVAL OF A SPLIT SECOND HAS PASSED SINCE LAST CALL.
   if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
     add_to_score();
+    hit_sound_fx();
     calculate_score_game_time_remaining();
     score_game_screen();
 
     add_to_score_prevmillis = millis();
     }
-  //send_command_to_MP3_player(play_second_song, 6);
 
   //FUNCTION CALLS TO SWITCH SCREENS AFTER SPECIFICED TIME INTERVAL AND GIVEN CERTAIN CONDITIONS//
   //CALLS FUNCTION TO PRINT FINAL_SCORE_SCREEN GIVEN THAT SCORE_GAME'S SPECIFIED TIME LENGTH HAS PASSED AND CURRENT_SCREEN IS SET TO "SCORE_GAME". PREVMILLIS VAR IS RESET TO MILLIS AT SWITCH FROM "SELECT_TIME" SCREEN TO "SCORE_GAME" SCREEN.
@@ -209,6 +231,6 @@ void loop() {
   if ( (millis() >= auto_return_to_startscreen_prevmillis + auto_return_to_startscreen_interval) and (current_screen != "start") and (current_screen != "score_game") ) {
     start_screen();
     Serial.println(F("Auto returned to Start_Screen")); 
-  
  }
+ 
 }

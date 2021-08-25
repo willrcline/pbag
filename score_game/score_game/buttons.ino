@@ -38,6 +38,8 @@ void screen_toggle() {
     //prevmillis var is reset to millis during this transition from "select_time" to "score_game" screen.
     //After the specified number of minutes has passed, final_score_screen will be triggered to end score_game.
     score_game_time_length_prevmillis = millis();
+    //Sound is played as screen switches from select time to score game to indicate the game has begun.
+    //        send_command_to_MP3_player(play_third_track, 6);
 
     auto_return_to_startscreen_prevmillis = millis();
   }

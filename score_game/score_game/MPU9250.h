@@ -869,24 +869,24 @@ private:
         }
 
         if (b_verbose) {
-            Serial.print("x-axis self test: acceleration trim within : ");
-            Serial.print(self_test_result[0], 1);
-            Serial.println("% of factory value");
-            Serial.print("y-axis self test: acceleration trim within : ");
-            Serial.print(self_test_result[1], 1);
-            Serial.println("% of factory value");
-            Serial.print("z-axis self test: acceleration trim within : ");
-            Serial.print(self_test_result[2], 1);
-            Serial.println("% of factory value");
-            Serial.print("x-axis self test: gyration trim within : ");
-            Serial.print(self_test_result[3], 1);
-            Serial.println("% of factory value");
-            Serial.print("y-axis self test: gyration trim within : ");
-            Serial.print(self_test_result[4], 1);
-            Serial.println("% of factory value");
-            Serial.print("z-axis self test: gyration trim within : ");
-            Serial.print(self_test_result[5], 1);
-            Serial.println("% of factory value");
+//            Serial.print("x-axis self test: acceleration trim within : ");
+//            Serial.print(self_test_result[0], 1);
+//            Serial.println("% of factory value");
+//            Serial.print("y-axis self test: acceleration trim within : ");
+//            Serial.print(self_test_result[1], 1);
+//            Serial.println("% of factory value");
+//            Serial.print("z-axis self test: acceleration trim within : ");
+//            Serial.print(self_test_result[2], 1);
+//            Serial.println("% of factory value");
+//            Serial.print("x-axis self test: gyration trim within : ");
+//            Serial.print(self_test_result[3], 1);
+//            Serial.println("% of factory value");
+//            Serial.print("y-axis self test: gyration trim within : ");
+//            Serial.print(self_test_result[4], 1);
+//            Serial.println("% of factory value");
+//            Serial.print("z-axis self test: gyration trim within : ");
+//            Serial.print(self_test_result[5], 1);
+//            Serial.println("% of factory value");
         }
 
         bool b = true;

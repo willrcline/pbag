@@ -92,33 +92,33 @@ void loadCalibration() {
 }
 
 void printCalibration() {
-    Serial.println("< calibration parameters >");
-    Serial.print("calibrated? : ");
-    Serial.println(readByte(EEP_CALIB_FLAG) ? "YES" : "NO");
-    Serial.print("acc bias x  : ");
-    Serial.println(readFloat(EEP_ACC_BIAS + 0) * 1000.f / MPU9250::CALIB_ACCEL_SENSITIVITY);
-    Serial.print("acc bias y  : ");
-    Serial.println(readFloat(EEP_ACC_BIAS + 4) * 1000.f / MPU9250::CALIB_ACCEL_SENSITIVITY);
-    Serial.print("acc bias z  : ");
-    Serial.println(readFloat(EEP_ACC_BIAS + 8) * 1000.f / MPU9250::CALIB_ACCEL_SENSITIVITY);
-    Serial.print("gyro bias x : ");
-    Serial.println(readFloat(EEP_GYRO_BIAS + 0) / MPU9250::CALIB_GYRO_SENSITIVITY);
-    Serial.print("gyro bias y : ");
-    Serial.println(readFloat(EEP_GYRO_BIAS + 4) / MPU9250::CALIB_GYRO_SENSITIVITY);
-    Serial.print("gyro bias z : ");
-    Serial.println(readFloat(EEP_GYRO_BIAS + 8) / MPU9250::CALIB_GYRO_SENSITIVITY);
-    Serial.print("mag bias x  : ");
-    Serial.println(readFloat(EEP_MAG_BIAS + 0));
-    Serial.print("mag bias y  : ");
-    Serial.println(readFloat(EEP_MAG_BIAS + 4));
-    Serial.print("mag bias z  : ");
-    Serial.println(readFloat(EEP_MAG_BIAS + 8));
-    Serial.print("mag scale x : ");
-    Serial.println(readFloat(EEP_MAG_SCALE + 0));
-    Serial.print("mag scale y : ");
-    Serial.println(readFloat(EEP_MAG_SCALE + 4));
-    Serial.print("mag scale z : ");
-    Serial.println(readFloat(EEP_MAG_SCALE + 8));
+//    Serial.println("< calibration parameters >");
+//    Serial.print("calibrated? : ");
+//    Serial.println(readByte(EEP_CALIB_FLAG) ? "YES" : "NO");
+//    Serial.print("acc bias x  : ");
+//    Serial.println(readFloat(EEP_ACC_BIAS + 0) * 1000.f / MPU9250::CALIB_ACCEL_SENSITIVITY);
+//    Serial.print("acc bias y  : ");
+//    Serial.println(readFloat(EEP_ACC_BIAS + 4) * 1000.f / MPU9250::CALIB_ACCEL_SENSITIVITY);
+//    Serial.print("acc bias z  : ");
+//    Serial.println(readFloat(EEP_ACC_BIAS + 8) * 1000.f / MPU9250::CALIB_ACCEL_SENSITIVITY);
+//    Serial.print("gyro bias x : ");
+//    Serial.println(readFloat(EEP_GYRO_BIAS + 0) / MPU9250::CALIB_GYRO_SENSITIVITY);
+//    Serial.print("gyro bias y : ");
+//    Serial.println(readFloat(EEP_GYRO_BIAS + 4) / MPU9250::CALIB_GYRO_SENSITIVITY);
+//    Serial.print("gyro bias z : ");
+//    Serial.println(readFloat(EEP_GYRO_BIAS + 8) / MPU9250::CALIB_GYRO_SENSITIVITY);
+//    Serial.print("mag bias x  : ");
+//    Serial.println(readFloat(EEP_MAG_BIAS + 0));
+//    Serial.print("mag bias y  : ");
+//    Serial.println(readFloat(EEP_MAG_BIAS + 4));
+//    Serial.print("mag bias z  : ");
+//    Serial.println(readFloat(EEP_MAG_BIAS + 8));
+//    Serial.print("mag scale x : ");
+//    Serial.println(readFloat(EEP_MAG_SCALE + 0));
+//    Serial.print("mag scale y : ");
+//    Serial.println(readFloat(EEP_MAG_SCALE + 4));
+//    Serial.print("mag scale z : ");
+//    Serial.println(readFloat(EEP_MAG_SCALE + 8));
 }
 
 void printBytes() {

@@ -1,3 +1,7 @@
+//CONTENTS
+//print general debug info: called throughout program(on all screens) at 5 sec intervals to show useful debug info
+//print orientation debug info: Function called from millis if statement when current_screen is set such that orientation is used. Millis interval passes such that it is called every split second.
+
 void print_general_debug_info() {
   Serial.println(F("GENERAL_DEBUG_INFO:"));
   Serial.print(F("current_screen: "));

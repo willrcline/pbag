@@ -36,17 +36,17 @@
 // Select storage device to TF card
 static int8_t select_SD_card[] = {0x7e, 0x03, 0X35, 0x01, 0xef}; // 7E 03 35 01 EF
 // Play with index: /01/001xxx.mp3
-static int8_t play_first_song[] = {0x7e, 0x04, 0x41, 0x00, 0x01, 0xef}; // 7E 04 41 00 01 EF
+static int8_t play_first_track[] = {0x7e, 0x04, 0x41, 0x00, 0x01, 0xef}; // 7E 04 41 00 01 EF
 // Play with index: /01/002xxx.mp3
-static int8_t play_second_song[] = {0x7e, 0x04, 0x41, 0x00, 0x02, 0xef}; // 7E 04 41 00 02 EF
-// Play the song.
-static int8_t play_third_song[] = {0x7e, 0x04, 0x41, 0x00, 0x03, 0xef}; // 7E 04 41 00 02 EF
-// Play the song.
+static int8_t play_second_track[] = {0x7e, 0x04, 0x41, 0x00, 0x02, 0xef}; // 7E 04 41 00 02 EF
+// Play the track.
+static int8_t play_third_track[] = {0x7e, 0x04, 0x41, 0x00, 0x03, 0xef}; // 7E 04 41 00 02 EF
+// Play the track.
 static int8_t play[] = {0x7e, 0x02, 0x01, 0xef}; // 7E 02 01 EF
-// Pause the song.
+// Pause the track.
 static int8_t pause[] = {0x7e, 0x02, 0x02, 0xef}; // 7E 02 02 EF
-//stop song
-static int8_t stop_song[] = {0x7E, 0x02, 0x0E, 0xEF};
+//stop track
+static int8_t stop_track[] = {0x7E, 0x02, 0x0E, 0xEF};
 //set volume. on 2nd to last, 0F = 15 and 1E = 30
 static int8_t set_volume[] = {0x7E, 0x03, 0x31, 0x0F, 0xEF};
 
@@ -59,10 +59,10 @@ SoftwareSerial MP3(MP3_RX, MP3_TX);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 //set pin numbers
-int led_pin = 13;
-int mid_btn_pin = 11;
-int up_btn_pin = 12;
-int down_btn_pin = 10;
+const int led_pin = 13;
+const int mid_btn_pin = 11;
+const int up_btn_pin = 12;
+const int down_btn_pin = 10;
 
 String direction_btn_polling;
 
@@ -71,15 +71,15 @@ DS3231  rtc(SDA, SCL);
 
 //declare millis time interval and previous(timekeeping) variables
 
-long update_time_and_timer_interval = 1100;
-long activate_alarm_interval = 500;
-long orientation_update_interval = 25;
-long debounce_interval = 200;    // the debounce time; increase if the output flickers
-long auto_return_to_mainscreen_interval = 30000;
-long auto_disable_alarm_interval = 300000;
-long serial_info_update_interval = 5000;
-long main_screen_update_interval = 60000;
-long progress_bar_update_interval = 4000;
+const long update_time_and_timer_interval = 1100;
+const long activate_alarm_interval = 500;
+const long orientation_update_interval = 25;
+const long debounce_interval = 200;    // the debounce time; increase if the output flickers
+const long auto_return_to_mainscreen_interval = 30000;
+const long auto_disable_alarm_interval = 300000;
+const long serial_info_update_interval = 5000;
+const long main_screen_update_interval = 60000;
+const long progress_bar_update_interval = 4000;
 
 long update_time_and_timer_prevmillis = 0;
 long activate_alarm_prevmillis = 0;

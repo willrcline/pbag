@@ -1,3 +1,6 @@
+//CONTENTS
+//update orientation variables: called repeatedly from millis if statement when on screens that use orientation. Calls functions declared in mpu9250.h file to get raw values, then makes adjustments to those values to make them usable(up to absolute value 90)
+
 void update_orientation_vars(){
     //RAW VALUES TAKEN FROM ORIENTATION SENSOR
     raw_yaw = mpu.getYaw();
