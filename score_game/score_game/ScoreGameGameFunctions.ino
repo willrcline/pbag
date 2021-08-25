@@ -33,8 +33,8 @@ void add_to_score() {
     }
 
 void hit_sound_fx() {
-  if ( (pitch > 87) or (roll > 87){
-      send_command_to_MP3_player(play_second_track, 6)
+  if ( (pitch > 87) or (roll > 87) ) {
+      send_command_to_MP3_player(play_second_track, 6);
     }        
 }
 
