@@ -44,6 +44,8 @@ void screen_toggle() {
     auto_return_to_startscreen_prevmillis = millis();
   }
   else if (current_screen == "score_game") {
+    //serial print current high score when button switches from score game to final score screen for debugging
+    score_game_post_game_debug_info();
     final_score_screen();
 
     auto_return_to_startscreen_prevmillis = millis();

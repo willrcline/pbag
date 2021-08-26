@@ -32,3 +32,12 @@ void print_orientation_debug_info() {
   Serial.println(F(" min(s)"));
   Serial.print('\n');
 }
+
+void score_game_post_game_debug_info() {
+  Serial.println(F("SCORE_GAME_POST_GAME_DEBUG_INFO:"));
+  Serial.print(F("Final score: "));
+  Serial.println(score);
+  Serial.print(F("Current score game time length high score: "));
+  Serial.println(return_particular_high_score(score_game_time_length));
+  Serial.print('\n');
+}

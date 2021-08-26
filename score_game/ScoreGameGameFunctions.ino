@@ -21,8 +21,8 @@ void add_to_score() {
       //Roll and pitch were below minimum required ammount to be considered a "small_hit"
     }
     //CALCULATE UPDATED SCORE VALUE BY WEIGHING AND SUMMING BIG, MED, AND SMALL HIT VALUES
-    score = big_hit*9 + med_hit*3 + small_hit;
-    unweighted_score = big_hit + med_hit + small_hit;
+    score = (big_hit*9) + (med_hit*3) + (small_hit);
+    unweighted_score = (big_hit) + (med_hit) + (small_hit);
 
 //    FIRST HIT
 //    if (unweighted_hit_count == 1) {
@@ -68,8 +68,40 @@ void read_current_high_scores() {
    high_score_10m = EEPROM.read(10);
 }
 
-void write_new_high_score(score_game_time_length, score) {
+void write_new_high_score() {
+  //write(memory address, information to store)
   EEPROM.write(score_game_time_length, score);
 }
 
-void compare_score_to_current_high_score()
+long return_particular_high_score(int score_game_time_length) {
+  if (score_game_time_length == 1) {
+    return high_score_1m;
+  }
+  else if (score_game_time_length == 2) {
+    return high_score_2m;
+  }
+}
+
+bool compare_score_to_current_high_score() {
+  //get high score for current score game time length set to local var for comparison
+  long current_high_score_for_that_game_time_length;
+  current_high_score_for_that_game_time_length = return_particular_high_score(score_game_time_length);
+
+  //Now that current_high_score_for_that_game_time_length is locally set  to the high score of the same score_game_time_length that was put in the parameters, check how it compares to the current score game's score
+  //If there's a new high score:
+  if (current_high_score_for_that_game_time_length < score) {
+    //overwrite new high score to eeprom at location denoted by score game time length integer
+    write_new_high_score();
+    //overwrite high score vars to reflect updated high score for that game time length
+    read_current_high_scores();
+
+    //Play "new record" track to indicate to user new high score auditorally
+
+    //return true to indicate to lcd print function that the current high score has been exceded.
+    return true;
+  }
+  //If there's not a new high score:
+  else {
+    return false;
+  }
+}

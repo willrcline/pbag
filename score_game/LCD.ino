@@ -16,7 +16,7 @@ void start_screen() {
   lcd.print(F("Press middle to:"));
 
   //line 2
-  lcd.setCursor(6, 1);
+  lcd.setCursor(5, 1);
   lcd.print(F("START"));
 }
 
@@ -63,17 +63,33 @@ void final_score_screen() {
   lcd.clear();
   //update current screen to reflect where we are at:
   current_screen = "final_score";
-
+  
   //PRINT TO SCREEN
-  //line 1
-  lcd.setCursor(0, 0);
-  lcd.print(F("Final Score:"));
+  //checks if score exceeds current high score var for that game time length and overwrites it in eeprom and overwrites the highscore var in the program if so.
+  if (compare_score_to_current_high_score() == true) {
+    //line 1
+    lcd.setCursor(0, 0);
+    lcd.print(F("New High Score!"));
 
-  //line 2
-  lcd.setCursor(0, 1);
-  lcd.print(score);
-  lcd.print(F(" in "));
-  lcd.print(score_game_time_length);
-  lcd.print(F("m"));
+    //line 2
+    lcd.setCursor(0, 1);
+    lcd.print(score);
+    lcd.print(F(" in "));
+    lcd.print(score_game_time_length);
+    lcd.print(F("m"));
+  }
+  else {
+    //line 1
+    lcd.setCursor(0, 0);
+    lcd.print(F("Final Score:"));
+  
+    //line 2
+    lcd.setCursor(0, 1);
+    lcd.print(score);
+    lcd.print(F(" in "));
+    lcd.print(score_game_time_length);
+    lcd.print(F("m"));
+
+  }
 
 }

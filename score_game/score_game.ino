@@ -237,7 +237,7 @@ void loop() {
   //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME" AND ADD_TO_SCORE_INTERVAL OF A SPLIT SECOND HAS PASSED SINCE LAST CALL.
   if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
     add_to_score();
-     hit_sound_fx();
+    hit_sound_fx();
     calculate_score_game_time_remaining();
     score_game_screen();
 
@@ -247,7 +247,7 @@ void loop() {
   //FUNCTION CALLS TO SWITCH SCREENS AFTER SPECIFICED TIME INTERVAL AND GIVEN CERTAIN CONDITIONS//
   //CALLS FUNCTION TO PRINT FINAL_SCORE_SCREEN GIVEN THAT SCORE_GAME'S SPECIFIED TIME LENGTH HAS PASSED AND CURRENT_SCREEN IS SET TO "SCORE_GAME". PREVMILLIS VAR IS RESET TO MILLIS AT SWITCH FROM "SELECT_TIME" SCREEN TO "SCORE_GAME" SCREEN.
   if ( (current_screen == "score_game") and (millis() > score_game_time_length_prevmillis + score_game_time_length*60000) ) {
-    compare_score_to_current_high_score();
+    score_game_post_game_debug_info();
     final_score_screen();
 
     score_game_time_length_prevmillis = millis();
