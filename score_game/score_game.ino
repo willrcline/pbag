@@ -6,9 +6,11 @@
 
 
 #include <LiquidCrystal_I2C.h> //used for screen; Library manager: library by Marco Schwartz
-#include <SoftwareSerial.h> //used for sound
+//#include <SoftwareSerial.h> //used for sound
+#include <AltSoftSerial.h> //used for sound
 #include "MPU9250.h" //Used for Orientation sensor; Built by UnityLab on Fiver
 #include "eeprom_utils.h" //Used for Orientation sensor calibration; Built by UnityLab on Fiver
+#include <EEPROM.h> //Used for permanent storage of high scores of score game
 
 //VARIABLE CONTENTS
 //MP3 serial pins; send_command_to_MP3_player commands, SoftwareSerial variables connect to rx/tx pin variables
@@ -17,6 +19,7 @@
 //Button pin numbers; direction button (set to "ON" or "OFF")
 //Current_screen
 //Score variables(big,med,small,score,etc.)
+//High score vars for each game time length(m): to be populated from eeprom
 //Time remaining in score_game(min,sec,total_sec)
 //Score game time length
 //Orientation sensor(raw, interpreted)
@@ -46,7 +49,7 @@ static int8_t stop_song[] = {0x7E, 0x02, 0x0E, 0xEF};
 static int8_t set_volume[] = {0x7E, 0x03, 0x31, 0x0F, 0xEF};
 
 // Define the Serial MP3 Player Module.
-SoftwareSerial MP3(MP3_RX, MP3_TX);
+AltSoftSerial MP3(MP3_RX, MP3_TX);
 //------------------------------------------------//
 
 // Set the LCD address to 0x27 for a 16 chars and 2 line display
@@ -63,6 +66,7 @@ long orientation_update_prevmillis = 0;
 long add_to_score_prevmillis = 0;
 long score_game_time_length_prevmillis = 0;
 long auto_return_to_startscreen_prevmillis = 0;
+long ding_track_prevmillis = 0;
 //(time intervals)
 const long general_debug_info_interval = 5000;
 const long orientation_debug_info_interval = 400;
@@ -70,6 +74,7 @@ const long debounce_interval = 200;    //Debounce time for buttons; increase if 
 const long orientation_update_interval = 25;
 const long add_to_score_interval = 100;
 const long auto_return_to_startscreen_interval = 30000;
+const long ding_track_interval = 2000;
 
 //Button variables
 //(pin numbers)
@@ -89,6 +94,26 @@ int unweighted_score = 0;
 int big_hit = 0;
 int med_hit = 0;
 int small_hit = 0;
+long high_score_1m = EEPROM.read(1);
+long high_score_2m = EEPROM.read(2);
+long high_score_3m = EEPROM.read(3);
+long high_score_4m = EEPROM.read(4);
+long high_score_5m = EEPROM.read(5);
+long high_score_6m = EEPROM.read(6);
+long high_score_7m = EEPROM.read(7);
+long high_score_8m = EEPROM.read(8);
+long high_score_9m = EEPROM.read(9);
+long high_score_10m = EEPROM.read(10);
+//long high_score_1m = 0;
+//long high_score_2m = 0;
+//long high_score_3m = 0;
+//long high_score_4m = 0;
+//long high_score_5m = 0;
+//long high_score_6m = 0;
+//long high_score_7m = 0;
+//long high_score_8m = 0;
+//long high_score_9m = 0;
+//long high_score_10m = 0;
 
 //Variables for time remaining in score_game
 long score_game_total_sec_remaining = 0;
@@ -212,7 +237,7 @@ void loop() {
   //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME" AND ADD_TO_SCORE_INTERVAL OF A SPLIT SECOND HAS PASSED SINCE LAST CALL.
   if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
     add_to_score();
-    hit_sound_fx();
+     hit_sound_fx();
     calculate_score_game_time_remaining();
     score_game_screen();
 
@@ -222,13 +247,14 @@ void loop() {
   //FUNCTION CALLS TO SWITCH SCREENS AFTER SPECIFICED TIME INTERVAL AND GIVEN CERTAIN CONDITIONS//
   //CALLS FUNCTION TO PRINT FINAL_SCORE_SCREEN GIVEN THAT SCORE_GAME'S SPECIFIED TIME LENGTH HAS PASSED AND CURRENT_SCREEN IS SET TO "SCORE_GAME". PREVMILLIS VAR IS RESET TO MILLIS AT SWITCH FROM "SELECT_TIME" SCREEN TO "SCORE_GAME" SCREEN.
   if ( (current_screen == "score_game") and (millis() > score_game_time_length_prevmillis + score_game_time_length*60000) ) {
+    compare_score_to_current_high_score();
     final_score_screen();
 
     score_game_time_length_prevmillis = millis();
     }
 
-  //GIVEN THAT CURRENT_SCREEN NOT SET TO "START" OR "SCORE_GAME", AFTER THE SUM OF PREVMILLIS AND THE TIME INTERVAL(OF ABOUT 30 SECS) BECOMES LESS THAN MILLIS(), START_SCREEN FUNCTION IS CALLED. 
-  if ( (millis() >= auto_return_to_startscreen_prevmillis + auto_return_to_startscreen_interval) and (current_screen != "start") and (current_screen != "score_game") ) {
+  //GIVEN THAT CURRENT_SCREEN NOT SET TO "START", "SCORE_GAME", OR "FINAL_SCORE", AFTER THE SUM OF PREVMILLIS AND THE TIME INTERVAL(OF ABOUT 30 SECS) BECOMES LESS THAN MILLIS(), START_SCREEN FUNCTION IS CALLED. 
+  if ( (millis() >= auto_return_to_startscreen_prevmillis + auto_return_to_startscreen_interval) and (current_screen != "start") and (current_screen != "score_game") and (current_screen != "final_score") ) {
     start_screen();
     Serial.println(F("Auto returned to Start_Screen")); 
  }

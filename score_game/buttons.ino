@@ -49,6 +49,8 @@ void screen_toggle() {
     auto_return_to_startscreen_prevmillis = millis();
   }
   else if (current_screen == "final_score") {
+    //self explanatory function placed here to occur after final_score screen is done displaying the populated vars, and before score game screen requires them virgin again.
+    reset_score_vars_after_final_score_screen();
     start_screen();
 
     auto_return_to_startscreen_prevmillis = millis();

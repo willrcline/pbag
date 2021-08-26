@@ -12,12 +12,12 @@ void start_screen() {
 
   //PRINT TO SCREEN
   //line 1
-  lcd.setCursor(2, 0);
-  lcd.print(F("Middle button"));
+  lcd.setCursor(0, 0);
+  lcd.print(F("Press middle to:"));
 
   //line 2
-  lcd.setCursor(4, 1);
-  lcd.print(F("to START"));
+  lcd.setCursor(6, 1);
+  lcd.print(F("START"));
 }
 
 
@@ -66,14 +66,14 @@ void final_score_screen() {
 
   //PRINT TO SCREEN
   //line 1
-  lcd.setCursor(2, 0);
+  lcd.setCursor(0, 0);
   lcd.print(F("Final Score:"));
-  //lcd.print(score_game_current_score);
 
   //line 2
   lcd.setCursor(0, 1);
-  //lcd.print(score_game_final_score);
+  lcd.print(score);
   lcd.print(F(" in "));
   lcd.print(score_game_time_length);
-  lcd.print(F(" min(s)"));
+  lcd.print(F("m"));
+
 }
