@@ -80,6 +80,30 @@ long return_particular_high_score(int score_game_time_length) {
   else if (score_game_time_length == 2) {
     return high_score_2m;
   }
+  else if (score_game_time_length == 3) {
+    return high_score_3m;
+  }
+  else if (score_game_time_length == 4) {
+    return high_score_4m;
+  }
+  else if (score_game_time_length == 5) {
+    return high_score_5m;
+  }
+  else if (score_game_time_length == 6) {
+    return high_score_6m;
+  }
+  else if (score_game_time_length == 7) {
+    return high_score_7m;
+  }
+  else if (score_game_time_length == 8) {
+    return high_score_8m;
+  }
+  else if (score_game_time_length == 9) {
+    return high_score_9m;
+  }
+  else if (score_game_time_length == 10) {
+    return high_score_10m;
+  }
 }
 
 bool compare_score_to_current_high_score() {

@@ -55,6 +55,7 @@ void score_game_screen() {
   lcd.print(F("Time left: "));
   lcd.print(score_game_min_remaining);
   lcd.print(F(":"));
+  print_leading_zero(score_game_sec_remaining);
   lcd.print(score_game_sec_remaining);
 }
 
@@ -92,4 +93,11 @@ void final_score_screen() {
 
   }
 
+}
+
+//lcd.prints a 0 if whatever is called in num parameter is less than 10 
+void print_leading_zero(int num) {
+  if (num < 10) {
+    lcd.print(F("0"));
+  }
 }
