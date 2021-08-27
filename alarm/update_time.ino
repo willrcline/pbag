@@ -11,12 +11,12 @@ void print_leading_zero(int num) {
     lcd.print(F("0"));
   }
 }
-//does same thing but to serial monitor
-void serial_print_leading_zero(int num) {
-  if (num < 10) {
-    Serial.print(F("0"));
-  }
-}
+////does same thing but to serial monitor
+//void serial_print_leading_zero(int num) {
+//  if (num < 10) {
+//    Serial.print(F("0"));
+//  }
+//}
 
 void print_leading_space(int num) {
   if (num < 10) {
@@ -33,16 +33,16 @@ void print_AM_or_PM(int hr) {
     lcd.print(F("AM"));
   }
 }
-
-void serial_print_AM_or_PM(int hr) {
-  //print AM or PM depending on the military time hour.
-  if (hr >= 12) {
-    Serial.print(F("PM"));
-  }
-  else if (hr < 12) {
-    Serial.print(F("AM"));
-  }
-}
+//
+//void serial_print_AM_or_PM(int hr) {
+////  //print AM or PM depending on the military time hour.
+////  if (hr >= 12) {
+////    Serial.print(F("PM"));
+////  }
+////  else if (hr < 12) {
+////    Serial.print(F("AM"));
+////  }
+//}
 
 void print_12hr_hour(int hr) {
   int twelve_hr_hour;

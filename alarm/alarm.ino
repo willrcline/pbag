@@ -148,11 +148,11 @@ int first_hit = 0;
 void setup() {
   // Setup Serial connection
   Serial.begin(115200);
-  Serial.println(F("serial has begun"));
+  //Serial.println(F("serial has begun"));
 
   // Initialize the rtc object
   rtc.begin();
-  Serial.println(F("rtc begun"));
+  //Serial.println(F("rtc begun"));
 
   //uncomment below to call set_datetime(hour,min,sec)/////////////////
   //set_datetime(18, 52, 12);
@@ -173,13 +173,13 @@ void setup() {
   
   // set up the LCD's number of columns and rows:
   lcd.init();
-  Serial.println(F("lcd initiated"));
+  //Serial.println(F("lcd initiated"));
 
   //set LCD backlight
   lcd.backlight();
   //call LCD main_screen to start
   main_screen();
-  Serial.println(F("main lcd screen function called"));
+  //Serial.println(F("main lcd screen function called"));
 
   pinMode(led_pin, OUTPUT);
   digitalWrite(led_pin, LOW);
@@ -189,11 +189,11 @@ void setup() {
   pinMode(up_btn_pin, INPUT);
   pinMode(down_btn_pin, INPUT);
   pinMode(mid_btn_pin, INPUT);
-  Serial.println(F("button pins initialized"));
+  //Serial.println(F("button pins initialized"));
   
   //INIT ORIENTATION SENSOR
   Wire.begin();
-  Serial.println(F("wire begin function called"));
+  //Serial.println(F("wire begin function called"));
   delay(2000);
   if (!mpu.setup(0x69)) {  // change to your own address
         while (1) {
@@ -224,20 +224,20 @@ void loop() {
       timer();
     }
     else {
-      Serial.println(current_loop);
+      //Serial.println(current_loop);
     }
  }
 
-  if (millis() - serial_info_update_prevmillis >= serial_info_update_interval) {
-    serial_print_time_info();
-
-    serial_info_update_prevmillis = millis();
- }
+//  if (millis() - serial_info_update_prevmillis >= serial_info_update_interval) {
+//    serial_print_time_info();
+//
+//    serial_info_update_prevmillis = millis();
+// }
  
   if ( (millis() - up_debounce_prevmillis > debounce_interval) and (digitalRead(up_btn_pin) == HIGH) and (direction_btn_polling == "ON") ) {
     up_btn();
 
-    Serial.println(F("Up btn pressed"));
+    //Serial.println(F("Up btn pressed"));
     
     up_debounce_prevmillis = millis();
  }
@@ -277,8 +277,8 @@ if ( (current_loop == "activate_alarm") and (mpu.update()) ) {
 
  if ( (millis() - main_screen_update_prevmillis >= main_screen_update_interval) and (current_sec == 0) and (current_screen == "main_screen") ) {
     main_screen();
-    Serial.print('\n');
-    Serial.println(F("Main Screen updated"));
+    //Serial.print('\n');
+    //Serial.println(F("Main Screen updated"));
 
     main_screen_update_prevmillis = millis();
  }
@@ -286,12 +286,12 @@ if ( (current_loop == "activate_alarm") and (mpu.update()) ) {
 //dont call auto return to main screen if already on main screen or on progress bar screen
  if ( (millis() - auto_return_to_mainscreen_prevmillis >= auto_return_to_mainscreen_interval) and (current_screen != "main_screen") and (current_screen != "progress_bar_screen") ) {
     main_screen();
-    Serial.println(F("Auto returned to mainscreen")); 
+    //Serial.println(F("Auto returned to mainscreen")); 
   
  }
 
  if ( (millis() - auto_disable_alarm_prevmillis >= auto_disable_alarm_interval) and (current_loop == "activate_alarm") ) {
-    Serial.println(F("Alarm auto disabled"));
+    //Serial.println(F("Alarm auto disabled"));
     disable_alarm();
  }
 

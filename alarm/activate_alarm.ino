@@ -5,7 +5,7 @@ void activate_alarm() {
   if (hit_count < max_hit_count){
     //MPU mod
     serial_print_orientation_data();
-    serial_print_hit_data();
+    //serial_print_hit_data();
   
     //Big hit:
     if ( (pitch < 75) or (roll < 75) ){
@@ -43,7 +43,8 @@ void activate_alarm() {
        */
     }
     else {
-      Serial.println(F("Hits were below minimum on this iteration of the activate_alarm loop")); }
+      //Serial.println(F("Hits were below minimum on this iteration of the activate_alarm loop")); 
+      }
     
     hit_count = big*3 + med*2 + small;
     unweighted_hit_count = big + med + small;
@@ -51,8 +52,8 @@ void activate_alarm() {
     if (unweighted_hit_count == 1) {
       first_hit += 1;
       if (first_hit == 1) {
-        Serial.println(F("first hit on bag"));
-        send_command_to_MP3_player(play_third_song, 6); 
+        //Serial.println(F("first hit on bag"));
+        send_command_to_MP3_player(play_third_track, 6); 
       }
     }
 

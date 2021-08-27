@@ -1,7 +1,7 @@
 void timer() {
   if ( (current_hour == alarm_hour) and (current_min == alarm_min) and (current_sec <= min_sec_threshold)  ) {
       //call alarm function if alarm time matches current time
-      Serial.println(F("current time matches alarm time."));
+     // Serial.println(F("current time matches alarm time."));
       //Serial.flush();
       //Serial.begin(9600);
       if (hit_count < max_hit_count) {
@@ -18,7 +18,7 @@ void timer() {
         loadCalibration();
       }
      else {
-      Serial.println(F("Current_loop would be set to activate_alarm, but hit_count exceeds maximum."));
+      //Serial.println(F("Current_loop would be set to activate_alarm, but hit_count exceeds maximum."));
      }
    }
 }

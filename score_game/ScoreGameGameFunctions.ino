@@ -6,7 +6,7 @@
 void add_to_score() {
     //ADD TALLY TO BIG, MED, OR SMALL HIT VARIABLE DEPENDING ON CURRENT VALUE OF PITCH AND ROLL WHEN FUNCTION IS CALLED
     //Big hit:
-    if ( (pitch > 75) or (roll > 75) ){
+    if ( (pitch > 69) or (roll > 69) ){
       big_hit += 1;
     }        
     //Med hit:
@@ -34,7 +34,7 @@ void add_to_score() {
     }
 
 void hit_sound_fx() {
-  if ( (pitch > 87) or (roll > 87) and (millis() >= ding_track_prevmillis + ding_track_interval) ) {
+  if ( (pitch > 69) or (roll > 69) and (millis() >= ding_track_prevmillis + ding_track_interval) ) {
       send_command_to_MP3_player(play_second_track, 6);
 
       ding_track_prevmillis = millis();

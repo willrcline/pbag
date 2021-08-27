@@ -2,7 +2,7 @@
 //how can I use a loop to poll without screwing up millis() lazy loop or mills() attentive loop from continuing to poll properly?
 //would 2 middle buttons be more useful so that you don't have to press the middle one as many times to get back to main screen?
 void mid_btn() {
-  Serial.println(F("mid btn function triggered"));
+  //Serial.println(F("mid btn function triggered"));
   //when mid button triggered, first determine what screen you are currently on in order to know which screen to move to next. Use this info to change it to the thing that ought to be next in line.
   screen_toggle();
   

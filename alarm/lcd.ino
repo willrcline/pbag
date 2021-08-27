@@ -42,8 +42,8 @@ void main_screen() {
 void alarm_set_hour_screen() {
   lcd.clear();
   current_screen = "alarm_set_hour_screen";
-  Serial.print(F("current screen: "));
-  Serial.println(current_screen);
+//  Serial.print(F("current screen: "));
+//  Serial.println(current_screen);
 
   lcd.setCursor(0,0);
   lcd.print(F("Set Alarm Hour:"));
@@ -81,8 +81,8 @@ void alarm_set_min_screen() {
 void alarm_set_mode_screen() {
   lcd.clear();
   current_screen = "alarm_set_mode_screen";
-  Serial.print(F("current screen: "));
-  Serial.println(current_screen);
+//  Serial.print(F("current screen: "));
+//  Serial.println(current_screen);
 
   lcd.setCursor(0,0);
   lcd.print(F("Set Alarm Mode:"));
