@@ -34,10 +34,9 @@ void add_to_score() {
     }
 
 void hit_sound_fx() {
-  if ( (pitch > 69) or (roll > 69) and (millis() >= ding_track_prevmillis + ding_track_interval) ) {
-      send_command_to_MP3_player(play_second_track, 6);
-
+  if ( ( (pitch > 69) or (roll > 69) ) and (millis() >= ding_track_prevmillis + ding_track_interval) ) {
       ding_track_prevmillis = millis();
+      send_command_to_MP3_player(play_second_track, 6);
     }        
 }
 

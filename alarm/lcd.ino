@@ -88,6 +88,8 @@ void alarm_set_mode_screen() {
   lcd.print(F("Set Alarm Mode:"));
   
   lcd.setCursor(6,1);
+  Serial.print(F("alarm mode string: "));
+  Serial.println(alarm_mode_string);
   lcd.print(alarm_mode_string);
 }
 
