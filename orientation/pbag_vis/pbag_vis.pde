@@ -16,7 +16,7 @@ float roll, pitch;
 
 void setup() {
   size (1344, 896, P3D);
-  myPort = new Serial(this, "/dev/cu.usbserial-1410", 115200); // starts the serial communication
+  myPort = new Serial(this, "/dev/cu.usbserial-14230", 115200); // starts the serial communication
   myPort.bufferUntil('\n');
   
   //pbag = loadShape("red_cylinder.obj");

@@ -64,6 +64,7 @@ long mid_debounce_prevmillis = 0;
 long down_debounce_prevmillis = 0;
 long orientation_update_prevmillis = 0;
 long add_to_score_prevmillis = 0;
+long update_score_game_screen_prevmillis = 0;
 long score_game_time_length_prevmillis = 0;
 long auto_return_to_startscreen_prevmillis = 0;
 long ding_track_prevmillis = 0;
@@ -72,7 +73,8 @@ const long general_debug_info_interval = 5000;
 const long orientation_debug_info_interval = 400;
 const long debounce_interval = 200;    //Debounce time for buttons; increase if the output flickers
 const long orientation_update_interval = 25;
-const long add_to_score_interval = 100;
+const long add_to_score_interval = 30;
+const long update_score_game_screen_interval = 300;
 const long auto_return_to_startscreen_interval = 30000;
 const long ding_track_interval = 2000;
 
@@ -231,6 +233,13 @@ void loop() {
       update_orientation_vars();
     }
   }
+
+  if ( (current_screen == "score_game") and (millis() > update_score_game_screen_prevmillis + update_score_game_screen_interval) ) {
+    calculate_score_game_time_remaining();
+    score_game_screen();
+
+    update_score_game_screen_prevmillis = millis();
+    }
  
   //ADDS TALLY TO HIT VARIABLES AND UPDATES SCORE VALUE; CALLS FUNCTION THAT USES MILLIS() AND PREVMILLIS VAR TO CALCULATE VARS OF TIME REMAINING;...
   //...REPRINTS SCORE_GAME_SCREEN(TO DISPLAY UPDATED SCORE VAR)...
@@ -238,8 +247,6 @@ void loop() {
   if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
     add_to_score();
     hit_sound_fx();
-    calculate_score_game_time_remaining();
-    score_game_screen();
 
     add_to_score_prevmillis = millis();
     }
