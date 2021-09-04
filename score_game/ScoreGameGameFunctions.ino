@@ -55,22 +55,37 @@ void reset_score_vars_after_final_score_screen() {
 }
 
 void read_current_high_scores() {
-   high_score_1m = EEPROM.read(1);
-   high_score_2m = EEPROM.read(2);
-   high_score_3m = EEPROM.read(3);
-   high_score_4m = EEPROM.read(4);
-   high_score_5m = EEPROM.read(5);
-   high_score_6m = EEPROM.read(6);
-   high_score_7m = EEPROM.read(7);
-   high_score_8m = EEPROM.read(8);
-   high_score_9m = EEPROM.read(9);
-   high_score_10m = EEPROM.read(10);
+  high_score_1m = EEPROM.get(1*5, high_score_1m);
+  high_score_2m = EEPROM.get(2*5, high_score_2m);
+  high_score_3m = EEPROM.get(3*5, high_score_3m);
+  high_score_4m = EEPROM.get(4*5, high_score_4m);
+  high_score_5m = EEPROM.get(5*5, high_score_5m);
+  high_score_6m = EEPROM.get(6*5, high_score_6m);
+  high_score_7m = EEPROM.get(7*5, high_score_7m);
+  high_score_8m = EEPROM.get(8*5, high_score_8m);
+  high_score_9m = EEPROM.get(9*5, high_score_9m);
+  high_score_10m = EEPROM.get(10*5, high_score_10m);
 }
 
-void write_new_high_score() {
+long write_new_high_score(int score_game_time_length, long value) {
   //write(memory address, information to store)
-  EEPROM.write(score_game_time_length, score);
+  EEPROM.put(score_game_time_length*5, value);
 }
+
+////uncomment function and call it to rewrite all high scores to zero and then reread from eeprom to vars.
+//void reset_current_high_scores() {
+//  write_new_high_score(1, 0);
+//  write_new_high_score(2, 0);
+//  write_new_high_score(3, 0);
+//  write_new_high_score(4, 0);
+//  write_new_high_score(5, 0);
+//  write_new_high_score(6, 0);
+//  write_new_high_score(7, 0);
+//  write_new_high_score(8, 0);
+//  write_new_high_score(9, 0);
+//  write_new_high_score(10, 0);
+//  read_current_high_scores();
+//}
 
 long return_particular_high_score(int score_game_time_length) {
   if (score_game_time_length == 1) {
@@ -114,7 +129,7 @@ bool compare_score_to_current_high_score() {
   //If there's a new high score:
   if (current_high_score_for_that_game_time_length < score) {
     //overwrite new high score to eeprom at location denoted by score game time length integer
-    write_new_high_score();
+    write_new_high_score(score_game_time_length, score);
     //overwrite high score vars to reflect updated high score for that game time length
     read_current_high_scores();
 

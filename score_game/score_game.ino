@@ -96,26 +96,18 @@ int unweighted_score = 0;
 int big_hit = 0;
 int med_hit = 0;
 int small_hit = 0;
-long high_score_1m = EEPROM.read(1);
-long high_score_2m = EEPROM.read(2);
-long high_score_3m = EEPROM.read(3);
-long high_score_4m = EEPROM.read(4);
-long high_score_5m = EEPROM.read(5);
-long high_score_6m = EEPROM.read(6);
-long high_score_7m = EEPROM.read(7);
-long high_score_8m = EEPROM.read(8);
-long high_score_9m = EEPROM.read(9);
-long high_score_10m = EEPROM.read(10);
-//long high_score_1m = 0;
-//long high_score_2m = 0;
-//long high_score_3m = 0;
-//long high_score_4m = 0;
-//long high_score_5m = 0;
-//long high_score_6m = 0;
-//long high_score_7m = 0;
-//long high_score_8m = 0;
-//long high_score_9m = 0;
-//long high_score_10m = 0;
+
+//Init high score vars with what's currently stored in Eeprom.
+long high_score_1m = EEPROM.get(1*5, high_score_1m);
+long high_score_2m = EEPROM.get(2*5, high_score_2m);
+long high_score_3m = EEPROM.get(3*5, high_score_3m);
+long high_score_4m = EEPROM.get(4*5, high_score_4m);
+long high_score_5m = EEPROM.get(5*5, high_score_5m);
+long high_score_6m = EEPROM.get(6*5, high_score_6m);
+long high_score_7m = EEPROM.get(7*5, high_score_7m);
+long high_score_8m = EEPROM.get(8*5, high_score_8m);
+long high_score_9m = EEPROM.get(9*5, high_score_9m);
+long high_score_10m = EEPROM.get(10*5, high_score_10m);
 
 //Variables for time remaining in score_game
 long score_game_total_sec_remaining = 0;
@@ -172,6 +164,9 @@ void setup() {
       }
   }
   loadCalibration();
+
+//  //uncomment this and function declaration in ScoreGameGameFunctions tab to reset current high scores
+//  reset_current_high_scores();
 }
 
 //CONTENTS
@@ -190,6 +185,8 @@ void loop() {
   //GENERAL DEBUG INFO SENT TO SERIAL MONITOR EVERY 5 SECONDS
   if (millis() > general_debug_info_prevmillis + general_debug_info_interval) {
     print_general_debug_info();
+
+    score_game_current_high_scores_dubug_info();
 
     general_debug_info_prevmillis = millis();
   }
@@ -231,6 +228,9 @@ void loop() {
     static uint32_t orientation_update_prevmillis = millis();
     if (millis() > orientation_update_prevmillis + orientation_update_interval) {
       update_orientation_vars();
+
+      add_to_score();
+      hit_sound_fx();
     }
   }
 
@@ -241,15 +241,15 @@ void loop() {
     update_score_game_screen_prevmillis = millis();
     }
  
-  //ADDS TALLY TO HIT VARIABLES AND UPDATES SCORE VALUE; CALLS FUNCTION THAT USES MILLIS() AND PREVMILLIS VAR TO CALCULATE VARS OF TIME REMAINING;...
-  //...REPRINTS SCORE_GAME_SCREEN(TO DISPLAY UPDATED SCORE VAR)...
-  //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME" AND ADD_TO_SCORE_INTERVAL OF A SPLIT SECOND HAS PASSED SINCE LAST CALL.
-  if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
-    add_to_score();
-    hit_sound_fx();
-
-    add_to_score_prevmillis = millis();
-    }
+//  //ADDS TALLY TO HIT VARIABLES AND UPDATES SCORE VALUE; CALLS FUNCTION THAT USES MILLIS() AND PREVMILLIS VAR TO CALCULATE VARS OF TIME REMAINING;...
+//  //...REPRINTS SCORE_GAME_SCREEN(TO DISPLAY UPDATED SCORE VAR)...
+//  //...GIVEN THAT CURRENT_SCREEN IS SET TO "SCORE_GAME" AND ADD_TO_SCORE_INTERVAL OF A SPLIT SECOND HAS PASSED SINCE LAST CALL.
+//  if ( (current_screen == "score_game") and (millis() > add_to_score_prevmillis + add_to_score_interval) ) {
+//    add_to_score();
+//    hit_sound_fx();
+//
+//    add_to_score_prevmillis = millis();
+//    }
 
   //FUNCTION CALLS TO SWITCH SCREENS AFTER SPECIFICED TIME INTERVAL AND GIVEN CERTAIN CONDITIONS//
   //CALLS FUNCTION TO PRINT FINAL_SCORE_SCREEN GIVEN THAT SCORE_GAME'S SPECIFIED TIME LENGTH HAS PASSED AND CURRENT_SCREEN IS SET TO "SCORE_GAME". PREVMILLIS VAR IS RESET TO MILLIS AT SWITCH FROM "SELECT_TIME" SCREEN TO "SCORE_GAME" SCREEN.

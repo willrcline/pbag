@@ -127,13 +127,13 @@ void printBytes() {
 }
 
 void setupEEPROM() {
-    Serial.println("EEPROM start");
+//    Serial.println("EEPROM start");
 
     if (!isCalibrated()) {
-        Serial.println("Need Calibration!!");
+//        Serial.println("Need Calibration!!");
     }
-    Serial.println("EEPROM calibration value is : ");
+//    Serial.println("EEPROM calibration value is : ");
     printCalibration();
-    Serial.println("Loaded calibration value is : ");
+//    Serial.println("Loaded calibration value is : ");
     loadCalibration();
 }
